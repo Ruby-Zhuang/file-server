@@ -1,21 +1,36 @@
 const net = require('net');
-//const stdin = process.stdin;
+const readline = require('readline');
 
-//We need to specify the address and the port to connect to
+// Function to ask client user to enter a filename
+const askForFile = () => {
+  //CREATE READLINE.INTERFACE INSTANCE TO READ DATA FROM A READABLE STREAM
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  rl.question('Enter file name: ', (answer) => {
+    client.write(`./${answer}`);
+    rl.close();       // STREAM DOESN'T CLOSE?!
+  });
+};
+
+// Specify the address and the port to connect to
 const client = net.createConnection({
   host: 'localhost',
   port: 3000
 });
 
-// We need the encoding to tell the server and the client what kind of data are we transfering
+// Set encoding to tell the server and the client what kind of data are we transfering
 client.setEncoding('utf8');
-
-// Message to server when I, the client connect
-client.on('connect', function() {
-  client.write('./index.html');
-});
 
 // Message from server
 client.on('data', (data) => {
   console.log('Server says: ', data);
+  if (data.includes('What file are you looking for?')) askForFile();
+});
+
+// Message to server when I, the client connect
+client.on('connect', function() {
+  console.log('I have connected!');
 });

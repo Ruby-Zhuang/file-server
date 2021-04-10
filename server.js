@@ -11,7 +11,8 @@ server.on('connection', (client) => {
   client.setEncoding('utf8');
 
   // Message to client
-  client.write('Hello there!');
+  client.write('Hello there! \n');
+  client.write('What file are you looking for?');
 
   // When one of the connections sends data and we recieve it
   client.on('data', (data) => {
